@@ -2,6 +2,7 @@ package fr.fev.theo.tools;
 
 import fr.fev.theo.Main;
 import fr.fev.theo.computers.ComputerInfo;
+import fr.fev.theo.users.UserInfo;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class ExcelUtils {
 
@@ -76,6 +78,35 @@ public class ExcelUtils {
             }
             fr_sts++;
         }
+    }
+
+    public void getUsersNamesFromExcel(String file) {
+        int i = 2;
+        XSSFWorkbook workbook = pl.excelUtils.readExcelFile(file);
+        XSSFSheet sheet = workbook.getSheetAt(0);
+
+        while(sheet.getRow(i) != null) {
+            Row row = sheet.getRow(i);
+            String username = row.getCell(1).toString().toLowerCase(Locale.ROOT);
+            String licenceName = row.getCell(7).toString();
+            String licencePrice = row.getCell(8).toString();
+
+            double totalPrice = Double.parseDouble(licencePrice);
+            if(licenceName.contains("user")) {
+
+                UserInfo userInfo = pl.userInfoMap.get(UserInfo.getUserPrincipalNameWithDisplayName(username));
+
+                if(userInfo != null) {
+                    Main.log("oui oui");
+                    userInfo.addToLicence("<tr><td>" + licenceName + "</td><td>" + totalPrice  +" €</td></tr>");
+                    userInfo.addToPrice(totalPrice);
+                }
+            }
+            i++;
+
+        }
+
+
     }
 
     public void createNewExcel() {

@@ -128,7 +128,7 @@ public class ComputerInit {
                     String departement = pl.excelUtils.returnCellWithourNullError(row.getCell(2));
                     String contact = pl.excelUtils.returnCellWithourNullError(row.getCell(4));
 
-                    Main.log("" + i);
+                    //Main.log("" + i);
 
                     pl.computerInfoMap.putIfAbsent(computerName,
                             new ComputerInfo(0,
