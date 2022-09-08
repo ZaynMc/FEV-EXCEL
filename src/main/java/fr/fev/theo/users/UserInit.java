@@ -47,11 +47,14 @@ public class UserInit {
                 Statement statement = connection.createStatement();
 
                 if(userInfo.getId() > 0) {
-                    statement.executeUpdate("UPDATE portaildsit_users SET users_licences_table='" + userInfo.getLicences_tables() +"', totalPrice=" + userInfo.getTotalPrice() + ",description='" + userInfo.getDepartement() + "' WHERE userPrincipalName='" + userInfo.getUserPrincipalName() + "';");
+                   statement.executeUpdate("UPDATE portaildsit_users SET users_licences_table='" + userInfo.getLicences_tables() +"', totalPrice=" + userInfo.getTotalPrice() + ",description='" + userInfo.getDepartement().replace("'", "-") + "' WHERE userPrincipalName='" + userInfo.getUserPrincipalName() + "';");
                 } else {
-                    statement.executeUpdate("INSERT into portaildsit_users (mailNickname, displayName, userPrincipalName, company, description, users_licences_table) VALUES ('" + userInfo.getStringName() + "', '"
+                    statement.executeUpdate("INSERT into portaildsit_users (mailNickname, displayName, userPrincipalName, company, description, users_licences_table, totalPrice) VALUES ('" + userInfo.getStringName() + "', '"
                     + userInfo.getDisplayName() + "', '" + userInfo.getUserPrincipalName() + "', '" + userInfo.getCompany() + "','" + userInfo.getDepartement() + "','" + userInfo.getLicences_tables() + "', " + userInfo.getTotalPrice() + ");");
+
                 }
+
+
 
             } catch (SQLException e) {
                 throw new RuntimeException(e);
@@ -63,11 +66,15 @@ public class UserInit {
     private void readFiles() {
         readFile("sts", "FEV STS ");
         readFile("france", "FEV France");
+        readFile("northafrica", "FEV North Africa");
+        readFile("iberia", "FEV Iberia");
     }
 
     private void executePowerShell() {
         powerShell("OU=FEV-STS,OU=User Accounts,DC=FEV,DC=COM", "sts");
         powerShell("OU=FEV-FR,OU=User Accounts,DC=FEV,DC=COM", "france");
+        powerShell("OU=FEV-Northafrica,OU=User Accounts,DC=FEV,DC=COM", "northafrica");
+        powerShell("OU=ES,OU=User Accounts,DC=FEV,DC=COM", "iberia");
     }
 
 
@@ -153,6 +160,12 @@ public class UserInit {
                     String description = str[2] == null ? "" : str[2];
 
                     pl.userInfoMap.putIfAbsent(displayName, new UserInfo(0, mail, displayName, company, description));
+
+                    UserInfo userInfo = pl.userInfoMap.get(displayName);
+
+                    if(userInfo != null) {
+                        userInfo.setDepartement(description);
+                    }
                 }
             }
         } catch (IOException e) {

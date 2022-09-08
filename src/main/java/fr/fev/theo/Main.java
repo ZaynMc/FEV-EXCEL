@@ -16,7 +16,7 @@ public class Main {
 
     public static Main INSTANCE;
 
-    public boolean isLocal = true;                                                 //boolean to know each database reach
+    public boolean isLocal = false;                                                 //boolean to know each database reach
 
     public Map<String, UserInfo> userInfoMap = new HashMap<>();                    //hashmap for the users list
     public Map<String, ComputerInfo> computerInfoMap = new HashMap<>();            //hashmap for the computers list

@@ -41,7 +41,7 @@ public class ComputerInit {
             try {
                 Statement statement = connection.createStatement();
 
-                if(computerInfo.getId() > 0) {
+                if(computerInfo.getId() > 0 && computerInfo.getComputerName().length() > 1 && !(computerInfo.getComputerName().length() == 0)) {
 
                     statement.executeUpdate("UPDATE portaildsit_computers SET " +
                             ComputerVariablesEnum.COMPANY.getStr() + "='" + computerInfo.getCompany()
